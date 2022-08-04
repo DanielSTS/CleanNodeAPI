@@ -3,10 +3,10 @@ import { MissingParamError } from "../erros/missing-param-error";
 import { EmailValidator } from "../protocols/email-validator";
 import { SignUpController } from "./signup";
 
-interface SutTypes {
+type SutTypes = {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
-}
+};
 
 const makeSut = (): SutTypes => {
   class EmailValidatorStub implements EmailValidator {
@@ -91,5 +91,20 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new InvalidParamError("email"));
+  });
+
+  test("Should call EmailValidator with correct email", () => {
+    const { sut, emailValidatorStub } = makeSut();
+    const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
+    const httpRequest = {
+      body: {
+        name: "any name",
+        email: "invalid_ email@gmail.com",
+        password: "any_password",
+        passwordConfirmation: "any_password",
+      },
+    };
+    sut.handle(httpRequest);
+    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
   });
 });
