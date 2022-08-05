@@ -1,7 +1,10 @@
-import { AccountModel } from "../../domain/models/account";
-import { AddAccount, AddAccountModel } from "../../domain/usecases/add-account";
-import { InvalidParamError, MissingParamError, ServerError } from "../erros";
-import { EmailValidator } from "../protocols/";
+import {
+  EmailValidator,
+  AddAccount,
+  AddAccountModel,
+  AccountModel,
+} from "../signup/signup-protocols";
+import { InvalidParamError, MissingParamError, ServerError } from "../../erros";
 import { SignUpController } from "./signup";
 
 const makeEmailValidator = (): EmailValidator => {
@@ -166,7 +169,7 @@ describe("SignUp Controller", () => {
     );
   });
 
-  test("Should call AddAccount with values", () => {
+  test("Should call AddAccount with correct values", () => {
     const { sut, addAccountStub } = makeSut();
     const addSpy = jest.spyOn(addAccountStub, "add");
     const httpRequest = {
