@@ -3,7 +3,7 @@ import { AccountMongoRepository } from "./account";
 
 describe("Account Mongo Repository", () => {
   beforeAll(async () => {
-    await MongoHelper.connect(global.__MONGO_URI__);
+    await MongoHelper.connect(process.env.MONGO_URL);
   });
 
   afterAll(async () => {
@@ -12,7 +12,7 @@ describe("Account Mongo Repository", () => {
 
   beforeEach(async () => {
     const accountCollenction = MongoHelper.getCollection("accounts");
-    accountCollenction.deleteMany({});
+    await accountCollenction.deleteMany({});
   });
 
   const makeSut = (): AccountMongoRepository => {
